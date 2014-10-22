@@ -1,4 +1,6 @@
 from django.core.management.base import BaseCommand
+from abstractions.core import *
+
 
 def email_body(item):
     for x in ['email','long-html','long-text','shoty-html','short-text']:

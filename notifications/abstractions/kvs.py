@@ -53,10 +53,10 @@ class kvs:
             return hash.hexdigest()
 
     def _additem(self, value, keytype):
-        if isinstance(key, dict):
+        if isinstance(value, dict):
             key = self.__key(value, keytype)
-        elif isinstance(key, list):
-            key = [self.__key(i, keytype)  for i in value]
+        elif isinstance(value, list):
+            key = [self.__key(i, keytype) for i in value]
         else:
             raise AttributeError("Adding items requires either an item (dict) or a list of items")
         self[key] = value
@@ -66,14 +66,14 @@ class kvs:
         ''' 
         Add a mutable item or set of items to the KVS. Return their keys. 
         '''
-        return self._additem(value, keytype == "GUID")
+        return self._additem(value, keytype = "GUID")
 
     def add_immutable(self, value):
         ''' 
         Add an immutable item or set of items to the KVS. 
         Identical items may be stored in the same location. 
         '''
-        return self._additem(value, keytype == "SHA")
+        return self._additem(value, keytype = "SHA")
 
 class in_memory_kvs(kvs):
     def __init__(self):
@@ -90,24 +90,24 @@ class dynamo_kvs(kvs):
         raise NotImplementedError
 
     def get(self, key):
-        pass
+        raise NotImplementedError
 
     def set(self, key, value):
-        pass
+        raise NotImplementedError
 
 class sql_kvs(kvs):
     def __init__(self):
         raise NotImplementedError
 
     def get(self, key):
-        pass
+        raise NotImplementedError
 
     def set(self, key, value):
-        pass
+        raise NotImplementedError
 
 
 if __name__ == '__main__': 
     kvs = in_memory_kvs()
-    kvs[["hello", "bye"]] = ["Hi", "bye"]
-    print kvs["bye"]
-    kvs[kvs.add_mutable("Hi")]
+    kvs[["hello", "bye"]] = [{"Hi":"a"}, {"bye":"b"}]
+    assert kvs["bye"] == {'bye': 'b'}
+    assert kvs[kvs.add_mutable({"pi":3.14})] == {"pi":3.14}
