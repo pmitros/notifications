@@ -8,8 +8,31 @@ class InMemoryPubsub:
     and debugging.
 
     topic, subscriber, and items are strings.
+
+    The structure is simple. There is a dictionary of topics, and a
+    dictionary of subscribers. The dictionary keys are strings. The
+    entries are lists of queues (Queue.Queue). Went sending to a topic, 
+    we send to all the queues in that list. When a subscriber listens, 
+    they dequeue from all of the queues they subscribe to. For example, 
+    if we have topics t1, t2, t3, and subscriber: 
+      s1 subscribed to t1+t2
+      s2 subscribed to t1+t2
+      s3 subscribed to t3
+
+    We would have: 
+      subscribers = {'s1': [q11, q12], 's2':[q21, q22], 's3':[q33]}
+      topics = {'t1' : [q11, q21], 't2':[q12, q22], 't3':[q33]}
+
+    An alternative implementation would be to have one queue per 
+    subscriber. The queues are independent so that subscribers can 
+    independently pull from different topics. This is important for some 
+    use cases, such as e-mail digests. 
     '''
     def __init__(self):
+        '''
+        Created defaultdicts for topics and subscribers. With no
+        subscription, we get an empty list.
+        '''
         self._subscribers = collections.defaultdict(lambda : list())
         self._topics = collections.defaultdict(lambda : list())
 
