@@ -87,6 +87,8 @@ class InMemoryPubsub:
     def _get_queue_item(self, queue):
         '''
         Grab an item from a queue. Return None otherwise.
+
+        This is a helper function so we can easily use `iter` to change a queue into an iterator. 
         '''
         try:
             item = queue.get(False)
