@@ -23,6 +23,8 @@ class InMemoryPubsub:
       subscribers = {'s1': [q11, q12], 's2':[q21, q22], 's3':[q33]}
       topics = {'t1' : [q11, q21], 't2':[q12, q22], 't3':[q33]}
 
+    Where qnm is a Queue.Queue which connects subcriber n to topic m. 
+
     An alternative implementation would be to have one queue per 
     subscriber. The queues are independent so that subscribers can 
     independently pull from different topics. This is important for some 
